@@ -1,12 +1,14 @@
 ARG VARIANT=18-bullseye
 
 ARG USERNAME=node
-ARG NPM_GLOBAL=/usr/local/share/npm-global
+# ARG NPM_GLOBAL=/usr/local/share/npm-global
 
 FROM node:${VARIANT} AS base
 
+USER ${USERNAME}
+
 # Add NPM global to PATH.
-ENV PATH=${NPM_GLOBAL}/bin:${PATH}
+# ENV PATH=${NPM_GLOBAL}/bin:${PATH}
 
 #  RUN \
 #     # Configure global npm install location, use group to adapt to UID/GID changes
@@ -25,16 +27,26 @@ ENV PATH=${NPM_GLOBAL}/bin:${PATH}
 
 WORKDIR /home/node/app
 
-COPY package*.json ./
+COPY --chown=${USERNAME} ./package*.json ./
+
+RUN pwd && ls -al
 
 RUN npm ci
 
-COPY . .
+COPY --chown=${USERNAME} . .
+
+RUN pwd && ls -al
 
 FROM base as production
 
-ENV NODE_PATH=./build
+ENV NODE_PATH=./dist
 
-USER node
+USER ${USERNAME}
 
 RUN npm run build
+
+RUN pwd && ls -al
+
+EXPOSE 8080
+
+CMD ["npm", "run", "start"]
