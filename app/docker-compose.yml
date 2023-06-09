@@ -22,8 +22,12 @@ services:
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
     depends_on:
       - redis
+      - mongodb
+    networks:
+      - node-network
   
   redis:
     image: redis:6.2-alpine
@@ -34,7 +38,25 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes: 
       - cache:/data
+    networks:
+      - node-network
+
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - node-network
+    logging:
+      driver: "none"
 
 volumes:
+  dbdata:
   cache:
     driver: local
+
+networks:
+  node-network:
+    driver: bridge

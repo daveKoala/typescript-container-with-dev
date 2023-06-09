@@ -38,7 +38,7 @@ export const cache: Cache = {
 
         if (pingCommandResult != 'PONG') return 'Cache not connected'
 
-        return `${pingCommandResult}: cache connected`;
+        return `connected`;
     },
 
     async write() {

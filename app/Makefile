@@ -1,4 +1,4 @@
-.PHONY: help up up-prod down dev build push all
+.PHONY: help up up-prod down dev build push all test
 
 #vars
 IMAGENAME=core
@@ -25,6 +25,9 @@ push:
 
 all: build push
 
+test:
+	npm run test:local -- --grep "${description}"
+
 help:
 	@echo ""
 	@echo "Makefile"
@@ -44,3 +47,6 @@ help:
 	@echo "push    -- Push image"
 	@echo ""
 	@echo "all     -- Build, tag and push"
+	@echo ""
+	@echo "test    -- Run specific unit test using grep to find the test. Takes a value 'description"
+	@echo ""
