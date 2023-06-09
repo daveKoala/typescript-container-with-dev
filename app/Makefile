@@ -1,11 +1,11 @@
-.PHONY: help up up-prod down dev build push all test
+.PHONY: help dev up-prod down dev build push all test
 
 #vars
 IMAGENAME=core
 REPO=my.core.app
 IMAGEFULLNAME=${REPO}/${IMAGENAME}
 
-up:
+dev:
 	docker-compose --project-name ${IMAGENAME} -f docker-compose.yml up --build 
 
 up-prod:
@@ -34,7 +34,7 @@ help:
 	@echo ""
 	@echo "From the project root run the following"
 	@echo ""
-	@echo "up      --  Start a development container"
+	@echo "dev      --  Start a development container"
 	@echo ""
 	@echo "up-prod --  Build and run compiled script 'production'"
 	@echo ""
