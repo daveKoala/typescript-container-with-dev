@@ -28,6 +28,34 @@ services:
       - mongodb
     networks:
       - node-network
+
+  ts-node-docker2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/home/node/app/src
+      - ./nodemon.json:/home/node/app/nodemon.json
+    container_name: core-app-2
+    expose:
+      - '8081'
+    ports:
+      - '8081:8081'
+    command: npm run dev
+    environment:
+      - BUILD_ID=dev-container-2
+      - NODE_ENV=development
+      - PORT=8081
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
+    depends_on:
+      - redis
+      - mongodb
+    networks:
+      - node-network
   
   redis:
     image: redis:6.2-alpine
