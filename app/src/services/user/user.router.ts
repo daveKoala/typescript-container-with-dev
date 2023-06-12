@@ -1,27 +1,29 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { User } from "../../models/User";
 import { isMongoDBError } from "../../lib/database";
+import Router from "express-promise-router";
 
 const router = Router();
 
-router.get("/all", async (req: Request, resp: Response, next: NextFunction) => {
-  try {
-    const users = await User.find({});
+/**
+ * Notice that Router is not calling express.Router directly! This saves duplication of try/catch bocks.
+ * The error as automatically passed to next()
+ */
 
-    resp.status(200).json(users);
-  } catch (error) {
-    next(error);
-  }
+// This route would be better in its own router file and accessed with GET '/users'
+router.get("/all", async (req: Request, resp: Response) => {
+  const users = await User.find({});
+
+  resp.status(200).json(users);
 });
 
-router.get("/:id", async (req: Request, resp: Response, next: NextFunction) => {
-  try {
-    const id = req.params.id;
-    const user = await User.findById(id);
-
+router.get("/:id", async (req: Request, resp: Response) => {
+  const id = req.params.id;
+  const user = await User.findById(id);
+  if (user === null) {
+    resp.status(404).send("User not found");
+  } else {
     resp.status(200).json(user);
-  } catch (error) {
-    next(error);
   }
 });
 
@@ -42,17 +44,10 @@ router.post(
   }
 );
 
-router.delete(
-  "/:id",
-  async (req: Request, resp: Response, next: NextFunction) => {
-    try {
-      const deleteUser = await User.findByIdAndDelete(req.params.id).exec();
+router.delete("/:id", async (req: Request, resp: Response) => {
+  await User.findByIdAndDelete(req.params.id).exec();
 
-      resp.status(200).send();
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+  resp.status(200).send();
+});
 
 export default router;
