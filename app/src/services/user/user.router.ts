@@ -1,8 +1,18 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { User } from "../../models/User";
-import { isMongoDBError } from '../../lib/database';
+import { isMongoDBError } from "../../lib/database";
 
 const router = Router();
+
+router.get("/all", async (req: Request, resp: Response, next: NextFunction) => {
+  try {
+    const users = await User.find({});
+
+    resp.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get("/:id", async (req: Request, resp: Response, next: NextFunction) => {
   try {
