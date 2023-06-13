@@ -1,8 +1,8 @@
+import { isMongoDBError } from "../../lib/database";
+import { isValidDocumentId } from "../../middleware/isValidDocumentId";
 import { Request, Response, NextFunction } from "express";
 import { User } from "../../models/User";
-import { isMongoDBError } from "../../lib/database";
 import Router from "express-promise-router";
-import { isValidDocumentId } from "../../middleware/isValidDocumentId";
 
 const router = Router();
 
@@ -19,6 +19,7 @@ const router = Router();
  *   get:
  *     summary: Retrieve a list of users
  *     description: Retrieve a list of users. Can be used to populate a list of fake users when prototyping or testing an API.
+ *     tags: ["User"]
  *     responses:
  *       200:
  *         description: A list of users.
@@ -37,6 +38,7 @@ router.get("/all", async (req: Request, resp: Response) => {
  *   get:
  *     summary: Retrieve a user
  *     description: Retrieve a user by id
+ *     tags: ["User"]
  *     parameters:
  *       - in: path
  *         name: userId
@@ -70,6 +72,7 @@ router.get("/:id", isValidDocumentId, async (req: Request, resp: Response) => {
  *   post:
  *     summary: Create a user
  *     description: Create abd return a new user
+ *     tags: ["User"]
  *     responses:
  *       200:
  *         description: A user.
@@ -97,6 +100,7 @@ router.post(
  *   delete:
  *     summary: Delete a user
  *     description: Delete a user by id
+ *     tags: ["User"]
  *     responses:
  *       200:
  *         description: ok.
