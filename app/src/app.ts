@@ -6,6 +6,8 @@ import express, { Request, Response } from "express";
 import morgan from "morgan";
 import userRouter from "./services/user/user.router";
 import fetchOther from "./lib/fetchOther";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./lib/swagger";
 
 export const app = express();
 
@@ -21,6 +23,12 @@ app.use("/pingz", async (req: Request, res: Response) => {
   };
   res.status(200).json(details);
 });
+
+app.use("/docs/json", async (req: Request, res: Response) => {
+  res.status(200).json(swaggerSpec);
+});
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(auth("Add auth gate options here"));
 
