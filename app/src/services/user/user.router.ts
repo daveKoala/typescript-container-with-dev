@@ -1,8 +1,9 @@
-import { isMongoDBError } from "../../lib/database";
+import { isMongoDBError, isValidDocId } from "../../lib/database";
 import { isValidDocumentId } from "../../middleware/isValidDocumentId";
 import { Request, Response, NextFunction } from "express";
 import { User } from "../../models/User";
 import Router from "express-promise-router";
+import nextId from "../../lib/nextId";
 
 const router = Router();
 
@@ -20,6 +21,12 @@ const router = Router();
  *     summary: Retrieve a list of users
  *     description: Retrieve a list of users. Can be used to populate a list of fake users when prototyping or testing an API.
  *     tags: ["User"]
+ *     parameters:
+ *       - in: query
+ *         name: next
+ *         schema:
+ *          type: string
+ *          required: false
  *     responses:
  *       200:
  *         description: A list of users.
@@ -27,14 +34,24 @@ const router = Router();
  *         description: Unexpected error
  */
 router.get("/all", async (req: Request, resp: Response) => {
-  const users = await User.find({});
+  const query: any = {};
+  if (req.query.next && isValidDocId(`${req.query.next}`)) {
+    query["_id"] = { $gte: req.query.next as string };
+  }
+  const limit = 4;
 
-  resp.status(200).json(users);
+  const users = await User.find(query).limit(limit + 1);
+
+  const next = nextId(users, limit);
+
+  users.pop();
+
+  resp.status(200).json({ data: users, next });
 });
 
 /**
  * @swagger
- * /user/:id:
+ * /user/{id}:
  *   get:
  *     summary: Retrieve a user
  *     description: Retrieve a user by id

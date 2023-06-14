@@ -23,6 +23,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
       - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
+      - APPLICATION_INSIGHT_CONNECTION_STRING=InstrumentationKey=139e9bc0-6526-4799-a8cb-618e7a1975c6;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/
+      - APPLICATION_INSIGHT_SAMPLING_PERCENTAGE=100
+      - APPLICATION_INSIGHT_CLOUD_ROLE=core-app
     depends_on:
       - redis
       - mongodb
@@ -51,6 +54,9 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
       - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
+      - APPLICATION_INSIGHT_CONNECTION_STRING=InstrumentationKey=139e9bc0-6526-4799-a8cb-618e7a1975c6;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/
+      - APPLICATION_INSIGHT_SAMPLING_PERCENTAGE=100
+      - APPLICATION_INSIGHT_CLOUD_ROLE=core-app-2
     depends_on:
       - redis
       - mongodb

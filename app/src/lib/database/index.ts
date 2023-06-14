@@ -24,3 +24,9 @@ export const isMongoDBError = (error: unknown): boolean => {
     return true;
   }
 };
+
+export const isValidDocId = (id: string | null): boolean => {
+  if (id == null) return false;
+
+  return mongoose.Types.ObjectId.isValid(id);
+};

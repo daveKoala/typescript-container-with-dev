@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import mongoose from "mongoose";
+import { isValidDocId } from "../../lib/database";
 
 /**
  * Tests if the request param with key ':id' is a valid document ID
@@ -13,11 +13,7 @@ export const isValidDocumentId = (
   next: NextFunction
 ) => {
   try {
-    console.log({
-      id: req.params.id,
-      test: mongoose.Types.ObjectId.isValid(req.params.id),
-    });
-    if (!mongoose.Types.ObjectId.isValid(req.params.id || "")) {
+    if (!isValidDocId(req.params.id || "")) {
       resp.status(400).send("Parameter is not a valid document ID");
     }
     next();
