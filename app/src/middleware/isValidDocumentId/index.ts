@@ -7,17 +7,17 @@ import { isValidDocId } from "../../lib/database";
  * @param resp
  * @param next
  */
-export const isValidDocumentId = (
-  req: Request,
-  resp: Response,
-  next: NextFunction
-) => {
-  try {
-    if (!isValidDocId(req.params.id || "")) {
-      resp.status(400).send("Parameter is not a valid document ID");
+export const isValidDocumentId = (modelName: string) => {
+  return (req: Request, resp: Response, next: NextFunction) => {
+    try {
+      if (!isValidDocId(req.params.id || "")) {
+        resp
+          .status(400)
+          .send(`${req.params.id} is not a valid ${modelName} ID`);
+      }
+      next();
+    } catch (error) {
+      next(error);
     }
-    next();
-  } catch (error) {
-    next(error);
-  }
+  };
 };

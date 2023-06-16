@@ -16,16 +16,17 @@ services:
       - '8080:8080'
     command: npm run dev
     environment:
+      - APPLICATION_INSIGHT_CLOUD_ROLE=core-app
+      - APPLICATION_INSIGHT_CONNECTION_STRING=InstrumentationKey=139e9bc0-6526-4799-a8cb-618e7a1975c6;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/
+      - APPLICATION_INSIGHT_SAMPLING_PERCENTAGE=100
+      - "BASE_URL=http://localhost:"
       - BUILD_ID=dev-container
+      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
       - NODE_ENV=development
       - PORT=8080
       - REDIS_HOST=cache
-      - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
-      - APPLICATION_INSIGHT_CONNECTION_STRING=InstrumentationKey=139e9bc0-6526-4799-a8cb-618e7a1975c6;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/
-      - APPLICATION_INSIGHT_SAMPLING_PERCENTAGE=100
-      - APPLICATION_INSIGHT_CLOUD_ROLE=core-app
+      - REDIS_PORT=6379
     depends_on:
       - redis
       - mongodb
@@ -47,16 +48,17 @@ services:
       - '8081:8081'
     command: npm run dev
     environment:
+      - APPLICATION_INSIGHT_CLOUD_ROLE=core-app-2
+      - APPLICATION_INSIGHT_CONNECTION_STRING=InstrumentationKey=139e9bc0-6526-4799-a8cb-618e7a1975c6;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/
+      - APPLICATION_INSIGHT_SAMPLING_PERCENTAGE=100
+      - "BASE_URL=http://localhost:"
       - BUILD_ID=dev-container-2
+      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
       - NODE_ENV=development
       - PORT=8081
       - REDIS_HOST=cache
-      - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
-      - APPLICATION_INSIGHT_CONNECTION_STRING=InstrumentationKey=139e9bc0-6526-4799-a8cb-618e7a1975c6;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/
-      - APPLICATION_INSIGHT_SAMPLING_PERCENTAGE=100
-      - APPLICATION_INSIGHT_CLOUD_ROLE=core-app-2
+      - REDIS_PORT=6379
     depends_on:
       - redis
       - mongodb
