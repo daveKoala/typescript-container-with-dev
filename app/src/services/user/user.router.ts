@@ -4,9 +4,30 @@ import { Request, Response, NextFunction } from "express";
 import { User } from "../../models/User";
 import Router from "express-promise-router";
 import nextId from "../../lib/nextId";
-import validateRequestBody from "../../middleware/validate";
+import { Validator } from "../../middleware/validate";
 
 const router = Router();
+
+const { validate } = new Validator();
+
+const userSchema = {
+  type: "object",
+  required: ["firstName", "lastName"],
+  properties: {
+    firstName: {
+      type: "string",
+      minLength: 1,
+    },
+    lastName: {
+      type: "string",
+      minLength: 1,
+    },
+    email: {
+      type: "string",
+      minLength: 6,
+    },
+  },
+};
 
 /**
  * Notice that Router is not calling express.Router directly! This saves duplication of try/catch bocks.
@@ -127,7 +148,7 @@ router.get(
  */
 router.post(
   "/create",
-  validateRequestBody({ body: { hello: "world" } }),
+  validate({ body: userSchema }),
   async (req: Request, resp: Response, next: NextFunction) => {
     try {
       const newUser = new User(req.body);
