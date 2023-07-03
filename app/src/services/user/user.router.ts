@@ -1,10 +1,12 @@
 import { isMongoDBError, isValidDocId } from "../../lib/database";
 import { isValidDocumentId } from "../../middleware/isValidDocumentId";
 import { Request, Response, NextFunction } from "express";
-import { User } from "../../models/User";
+import { User, IUser } from "../../models/User";
+import { IOrganisation, Organisation } from "../../models/Organisation";
 import Router from "express-promise-router";
 import nextId from "../../lib/nextId";
 import { Validator } from "../../middleware/validate";
+import { Document, Types } from "mongoose";
 
 const router = Router();
 
@@ -115,12 +117,32 @@ router.get(
   isValidDocumentId("User"),
   async (req: Request, resp: Response) => {
     const id = req.params.id;
-    const user = await User.findById(id);
-    if (user === null) {
-      resp.status(404).send("User not found");
-    } else {
-      resp.status(200).json(user);
-    }
+    const idAsObjectID = new Types.ObjectId(id);
+
+    const organisations = await Organisation.find({ "users._id": id })
+      .lean()
+      .exec();
+
+    if (organisations === null) resp.status(404).send("User not found");
+
+    const userDetails = organisations[0].users.find(
+      (user: Partial<Document & IUser>) => {
+        return user._id.equals(idAsObjectID);
+      }
+    );
+
+    const cleanOrganisations = organisations.map(
+      (organisation: Partial<IOrganisation & Document>) => {
+        delete organisation.users;
+        delete organisation.__v;
+        return organisation;
+      }
+    );
+
+    resp.status(200).json({
+      organisations: cleanOrganisations,
+      user: userDetails,
+    });
   }
 );
 
